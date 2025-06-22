@@ -1,0 +1,34 @@
+# Файл: prefect.yaml
+
+# Имя этого проекта в Prefect.
+name: gsheet-sync-project
+
+# build: null # Секция build нам не нужна, Prefect найдет потоки сам.
+
+# pull: Указываем, как worker'у получить код.
+pull:
+  # Используем шаг из библиотеки prefect-github.
+  - prefect_github.deployments.steps.git_clone:
+      # Ссылка на ваш репозиторий.
+      repository: https://github.com/pavelimaree/prefect.git
+      # Ветка, которую нужно использовать.
+      branch: main
+      # !!! Раскомментируйте следующую строку, ЕСЛИ ваш репозиторий ПРИВАТНЫЙ !!!
+      # credentials: "{{ prefect.blocks.github-credentials.github-repo-token }}"
+
+# Определяем развертывания для каждого потока.
+deployments:
+  - name: catalog-cloud-sync
+    entrypoint: sync_flows.py:sync_catalog_flow
+
+  - name: promo-cloud-sync
+    entrypoint: sync_flows.py:sync_promo_flow
+
+  - name: cogs-cloud-sync
+    entrypoint: sync_flows.py:sync_cogs_flow
+      
+  - name: mediaplan-deals-cloud-sync
+    entrypoint: sync_flows.py:sync_mediaplan_deals_flow
+
+  - name: mediaplan-affl-cloud-sync
+    entrypoint: sync_flows.py:sync_mediaplan_affl_flow

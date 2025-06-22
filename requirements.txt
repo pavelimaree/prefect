@@ -1,0 +1,6 @@
+prefect
+gspread
+pandas
+psycopg2-binary
+oauth2client
+prefect-github
